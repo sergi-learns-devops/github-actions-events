@@ -1,9 +1,17 @@
 name: Events Demo 1
 on:
   pull_request:
-    types: 
+    types: #The activity types allows to specify an event to start the trigger. You can add various type in brackets ([type1, type2]) or listing.
       - opened
-  workflow_dispatch:
+  workflow_dispatch: #Also, I can add another event type.
+  push:
+    branches: #This is valid for branches filtering. All the branches mentioned, the workflow will be applied.
+      - master
+      - 'dev-*' #A character is only valid. For example: dev-new
+      - 'feat/**' #A character or other slash is valid. For example: feat/new feat/new/button
+      #If I have a branch called "development", all the pushes to this branch will no trigger the GitHub Action.
+    paths-ignore:
+      - '.github/workflows/*' #If I will modify the YAML files for GitHub Actions, when I pushed to GitHub, it won't activate the workflow.
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -20,3 +28,7 @@ jobs:
         run: npm run build
       - name: Deploy project
         run: echo "Deploying..."
+
+#I can cancel a workflow if I want from the GitHub Action interface.
+#Also, I can skip worflows runs when the action is push and pull_request. I need to include a string into the commit message between brackets ([skip ci], [ski actions]).
+#More information: https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-workflow-runs/skipping-workflow-runs
